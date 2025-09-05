@@ -2,6 +2,8 @@ using UnityEngine;
 
 public sealed class PlayerMovement : MonoBehaviour
 {
+    const string HorizontalAxis = "Horizontal";
+    const float OverlapRadius = 0.1f;
 
     [SerializeField] private int _moveSpeed;
     [SerializeField] private int _jumpForce;
@@ -23,7 +25,8 @@ public sealed class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        _moveInput = Input.GetAxisRaw("Horizontal");
+        _moveInput = Input.GetAxisRaw(HorizontalAxis);
+
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             Jump();
@@ -37,15 +40,22 @@ public sealed class PlayerMovement : MonoBehaviour
     }
 
     public float GetVerticalSpeed() => _rb.velocity.y;
-    public float GetHorizontalSpeed() => Input.GetAxis("Horizontal");
+
+    public float GetHorizontalSpeed() => Input.GetAxis(HorizontalAxis);
 
     public bool GetIsGrounded() => _isGrounded;
 
     private void Walk()
     {
         _rb.velocity = new Vector2(_moveInput * _moveSpeed, _rb.velocity.y);
-        if (_moveInput < 0f) transform.localScale = new Vector3(-1, 1, 1);
-        else if (_moveInput > 0f) transform.localScale = new Vector3(1, 1, 1);
+        if (_moveInput < 0f)
+        {
+            transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (_moveInput > 0f)
+        {
+            transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 
     private void Jump()
@@ -54,8 +64,9 @@ public sealed class PlayerMovement : MonoBehaviour
     }
     private bool CheckGround()
     {
-        Collider2D[] colliderLeft = Physics2D.OverlapCircleAll(_groundPosLeft.position, 0.1f, _groundLayer);
-        Collider2D[] colliderRight = Physics2D.OverlapCircleAll(_groundPosRight.position, 0.1f, _groundLayer);
+        Collider2D[] colliderLeft = Physics2D.OverlapCircleAll(_groundPosLeft.position, OverlapRadius, _groundLayer);
+        Collider2D[] colliderRight = Physics2D.OverlapCircleAll(_groundPosRight.position, OverlapRadius, _groundLayer);
+
         return colliderLeft.Length + colliderRight.Length > 0;
     }
 }
