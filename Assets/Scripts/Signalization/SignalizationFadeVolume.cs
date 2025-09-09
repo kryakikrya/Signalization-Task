@@ -7,7 +7,7 @@ public sealed class Signalization : MonoBehaviour
     [SerializeField] private float _targetVolume;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
+        if (collision.gameObject.TryGetComponent(out Player _))
         {
             if (_source.isPlaying == false)
             {
@@ -19,7 +19,7 @@ public sealed class Signalization : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.TryGetComponent<Player>(out Player player))
+        if (collision.gameObject.TryGetComponent(out Player _))
         {
             FadeVolume(0);
         }
